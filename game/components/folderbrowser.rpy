@@ -38,7 +38,6 @@ init python hide:
                 self.set_path(item_id)
 
             def expandaction(tree, item_id, expand):
-                print tree, item_id, expand
                 if not expand:
                     tree.remove_children(item_id)
                     tree.set_expanded(item_id, False, True)
@@ -64,13 +63,13 @@ init python hide:
             return tree
 
         def open(self, label, on_ok):
-            renpy.show_screen("_rg_folderbrowser_open", self, self._mk_tree(), label, on_ok)
+            renpy.show_screen("rg_folderbrowser_picker", self, self._mk_tree(), label, on_ok)
 
 
     store.RG_FolderBrowser = RG_FolderBrowser
 
 
-screen _rg_folderbrowser_open(folderbrowser, tree, label, on_ok):
+screen rg_folderbrowser_picker(folderbrowser, tree, label, on_ok):
     modal True
 
     frame:
@@ -94,7 +93,8 @@ screen _rg_folderbrowser_open(folderbrowser, tree, label, on_ok):
                 ysize 30
 
                 text _("Current directory:")
-                text ("" if folderbrowser.get_path() is None else folderbrowser.get_path())
+                use rg_wrap_max():
+                    text ("" if folderbrowser.get_path() is None else folderbrowser.get_path())
 
             viewport:
                 ysize 350
@@ -102,16 +102,28 @@ screen _rg_folderbrowser_open(folderbrowser, tree, label, on_ok):
                 mousewheel "vertical"
                 use rg_tree(tree)
 
+            textbutton _("Choose"):
+                xalign 0.5
+                yalign 1.0
 
-screen rg_folderbrowser(folderbrowser, maxwidth, label=None, on_ok=None):
+                if on_ok is None:
+                    action [Hide("rg_folderbrowser_picker")]
+                else:
+                    action [Hide("rg_folderbrowser_picker"), Function(on_ok, folderbrowser)]
+
+
+screen rg_folderbrowser_widget(folderbrowser, maxwidth, label=None, on_ok=None, tooltip=None):
     hbox:
         spacing 5
         xmaximum maxwidth
 
-        hbox:
-            xsize maxwidth - (32+2)
-            text ("" if folderbrowser.get_path() is None else folderbrowser.get_path())
+        use rg_wrap_max(maxwidth - (32+2)):
+            hbox:
+                text ("" if folderbrowser.get_path() is None else folderbrowser.get_path())
 
         imagebutton:
             idle "components/icons/folder-tree.png"
+            if tooltip is not None:
+                tooltip tooltip
+
             action Function(folderbrowser.open, label, on_ok)

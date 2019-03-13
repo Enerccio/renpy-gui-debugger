@@ -3,7 +3,7 @@ init python hide:
 
     class RG_Tree(object):
 
-        def __init__(self):
+        def __init__(self, autoselect=False):
             self.all_items = collections.OrderedDict()
             self.captions = {}
             self.parents = {}
@@ -11,6 +11,19 @@ init python hide:
 
             self.item_click_action = None
             self.expand_action = None
+            self.selected = None
+            self.autoselect = autoselect
+
+        def yield_state(self, other):
+            for item_id in self.all_items:
+                if item_id in other.all_items:
+                    if item_id in self.expanded:
+                        other.expanded.add(item_id)
+
+            other.expand_action = self.expand_action
+            other.item_click_action = self.item_click_action
+            other.selected = self.selected
+            other.autoselect = self.autoselect
 
         def add_item(self, item_id, item_caption=None):
             self.all_items[item_id] = None
@@ -110,6 +123,14 @@ init python hide:
 
                 yield item_id, level
 
+        def set_selected(self, item_id, expand=False):
+            if item_id in self.all_items:
+                self.selected = item_id
+                parent = item_id
+                while parent in self.parents:
+                    parent = self.parents[parent]
+                    self.set_expanded(parent, expanded=True)
+
         # item click event
         def set_item_click_action(self, action=lambda tree, item_id: None):
             self.item_click_action = action
@@ -118,6 +139,9 @@ init python hide:
             self.item_click_action = None
 
         def _item_clicked(self, item_id):
+            if self.autoselect:
+                self.selected = item_id
+                
             self.item_click_action(self, item_id)
 
         def set_expand_action(self, action=lambda tree, item_id, expanded: None):
@@ -163,6 +187,10 @@ screen rg_tree(renpy_tree):
                         idle "components/icons/tree-right-unavailable.png"
 
                 # tree item
-                textbutton renpy_tree.get_item_caption(item_id):
+                python:
+                    txt = renpy_tree.get_item_caption(item_id)
+                    if renpy_tree.selected == item_id:
+                        txt = "{color=#00ff00}" + txt + "{/color}"
+                textbutton txt:
                     action Function(renpy_tree._item_clicked, item_id)
                     sensitive renpy_tree.item_click_action is not None
