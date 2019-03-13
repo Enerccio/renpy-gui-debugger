@@ -1,0 +1,11 @@
+*.rpyc
+*.pyc
+*.pyo
+*.rpymc
+*.bat
+cache/
+saves/
+log.txt
+errors.txt
+traceback.txt
+*dists/
