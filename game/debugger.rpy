@@ -154,7 +154,7 @@ screen debugger_filebrowser():
 
         vbox:
             spacing 2
-            
+
             label _("Project sources:")
 
             if debugger.has_project():
@@ -174,15 +174,18 @@ screen debugger_tooltip_area():
 
 screen debugger_content():
 
+    # TODO: make shorter when attached
+    $ buffer_size = 642
+
     frame:
         xpos 315
         ypos 46
         xsize 1280-320
-        ysize 642
+        ysize buffer_size
 
         if debugger.has_project():
             vbox:
-                use buffer(debugger.active_buffer)
+                use buffer(debugger.active_buffer, buffer_size)
 
 
 screen debugger():

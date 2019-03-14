@@ -141,7 +141,7 @@ init python hide:
         def _item_clicked(self, item_id):
             if self.autoselect:
                 self.selected = item_id
-                
+
             self.item_click_action(self, item_id)
 
         def set_expand_action(self, action=lambda tree, item_id, expanded: None):
@@ -170,21 +170,21 @@ screen rg_tree(renpy_tree):
                     imagebutton:
                         if renpy_tree.expand_action is None:
                             if renpy_tree.is_expanded(item_id):
-                                idle "components/icons/tree-down.png"
+                                idle "_components/icons/tree-down.png"
                                 action Function(renpy_tree.set_expanded, item_id, False)
                             else:
-                                idle "components/icons/tree-right.png"
+                                idle "_components/icons/tree-right.png"
                                 action Function(renpy_tree.set_expanded, item_id, True)
                         else:
                             if renpy_tree.is_expanded(item_id):
-                                idle "components/icons/tree-down.png"
+                                idle "_components/icons/tree-down.png"
                                 action Function(renpy_tree._expand_event, item_id, False)
                             else:
-                                idle "components/icons/tree-right.png"
+                                idle "_components/icons/tree-right.png"
                                 action Function(renpy_tree._expand_event, item_id, True)
                 else:
                     imagebutton:
-                        idle "components/icons/tree-right-unavailable.png"
+                        idle "_components/icons/tree-right-unavailable.png"
 
                 # tree item
                 python:

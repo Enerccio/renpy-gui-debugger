@@ -42,7 +42,7 @@ python early hide:
             self.value.default = False if isinstance(grp, str) else grp[1]
 
         def event(self, ev, x, y, st):
-            if ev == pygame.MOUSEBUTTONDOWN and x >= self.x and x <= self.x+self.w and y >= self.y and y <= self.y+self.h:
+            if ev.type == pygame.MOUSEBUTTONDOWN and x >= self.x and x <= self.x+self.w and y >= self.y and y <= self.y+self.h:
                 self.set_active()
 
             super(self, TextInput).event(ev, x, y, st)

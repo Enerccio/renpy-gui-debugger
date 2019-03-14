@@ -122,7 +122,7 @@ screen rg_folderbrowser_widget(folderbrowser, maxwidth, label=None, on_ok=None, 
                 text ("" if folderbrowser.get_path() is None else folderbrowser.get_path())
 
         imagebutton:
-            idle "components/icons/folder-tree.png"
+            idle "_components/icons/folder-tree.png"
             if tooltip is not None:
                 tooltip tooltip
 
